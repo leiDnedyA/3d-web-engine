@@ -5,6 +5,7 @@
 	<style type="text/css">
 		body {
 			margin: 0;
+			background-color: black;
 		}
 		#game_canv {
 			width: 100%;
@@ -13,8 +14,15 @@
 	</style>
 </head>
 <body>
-
+	<input type="text" id="usernameInput" placeholder="username"><button onclick="startOnClick();">Start</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/sockets.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js"></script>
-	<script src="main.js"></script>
+	<script src="js/main.js"></script>
+	<script type="text/javascript">
+		function startOnClick(){
+			playerStart();
+		}
+	</script>
 </body>
 </html>
