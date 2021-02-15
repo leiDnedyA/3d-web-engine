@@ -28,6 +28,7 @@ io.sockets.on('connection',function(socket){
 	socket.id = Math.random();
 	socket.x = 0;
 	socket.y = 0;
+	socket.z = 0;
 	SOCKET_LIST[socket.id] = socket;
 	var player = new Player(socket.id, 'name', 0, 0);
 	socket.emit("playerVars", {
@@ -40,6 +41,15 @@ io.sockets.on('connection',function(socket){
 
 	socket.emit('serverMsg',{
 		msg: 'hello'
+	});
+
+	socket.on('createPlayer',function(data){
+		player.name = data.name;
+		PLAYER_LIST[socket.id] = player;
+		player.x = data.x;
+		player.y = data.y;
+		player.z = data.z;
+		console.log(player.name + " has joined the server");
 	});
 
 	socket.on('disconnect',function(){
@@ -58,6 +68,7 @@ setInterval(function(){
 		pack.push({
 			x:player.x,
 			y:player.y,
+			z:player.z,
 			id:player.id,
 			name:player.name
 		});

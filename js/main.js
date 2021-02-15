@@ -14,6 +14,7 @@ const playerSize = 2;
 const textColor = "#FFFFFF";
 var localId = null;
 var isStarted = false;
+var tempStartPos = [0, 0, 0];
 
 
 //Setup for HTML elements
@@ -38,7 +39,7 @@ class Player{
 var ClientPlayer = {
 	object: null,
 	name: '',
-	id: null,
+	id: 0,
 	speed: 1/10,
     inputs: [false, false, false, false], //[up, down, left, right]
     velocity: [0, 0, 0],
@@ -72,10 +73,11 @@ var ClientPlayer = {
     update: function() {
     	this.movePlayer();
     },
-    init: function(obj){
+    init: function(obj, id){
     	this.object = obj;
     	this.name = obj.name;
-    	this.id = obj.id;
+    	this.id = id;
+      createPlayer();
     }
 };
 
@@ -149,9 +151,9 @@ function update(){
 function start(){
 
   isStarted = true;
-	playerObj = createPlayerObj(ClientPlayer.name, [0, 0, 0], '#' + Math.floor(Math.random()*16777215).toString(16), true);
-	scene.add(playerObj);
-	gameObjects.push(playerObj);
+  ClientPlayer.name = usernameInput.value;
+  playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], '#' + Math.floor(Math.random()*16777215).toString(16), true);
+	
 
   /* nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
   scene.add(nonPlayerObj);
@@ -164,7 +166,7 @@ function start(){
 }
 
 
-function createPlayerObj(name, position, pColor, isPlayer){
+function createPlayerObj(name, id, position, pColor, isPlayer){
 	const geometry = new THREE.BoxGeometry(playerSize, playerSize, playerSize);
 	const material = new THREE.MeshBasicMaterial({color: pColor});
 	const obj = new THREE.Mesh(geometry, material);
@@ -191,16 +193,32 @@ function createPlayerObj(name, position, pColor, isPlayer){
 	obj.position.set(position[0], position[1],position[2]);
 	obj.name = name;
 	if (isPlayer){
-		ClientPlayer.init(obj);
+		ClientPlayer.init(obj, id);
 	}
-	gameObjects.push(obj);
+	gameObjects.push([obj, id]);
+  console.log([obj, id]);
+  scene.add(obj);
 	return obj;
 }
 
 function playerStart(){
   if(!isStarted){
-    ClientPlayer.name = usernameInput.value;
     start();
   }
   
+}
+
+function gameObjectExistsId(id){
+  if (gameObjects[id]){
+    return true;
+  }
+  return false;
+}
+
+function gameObjectsLookUp(id){
+  for(i in gameObjects){
+    if (gameObjects[i][1] == id){
+      return gameObjects[i];
+    }
+  }
 }
