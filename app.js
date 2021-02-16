@@ -15,11 +15,12 @@ var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
 class Player{
-	constructor(id,name,x,y,z){
+	constructor(id,name,color,x,y,z){
 		this.x = x;
 		this.y = y;
 		this.id = id;
 		this.name = name;
+		this.color = color;
 	}
 }
 
@@ -46,6 +47,7 @@ io.sockets.on('connection',function(socket){
 	socket.on('createPlayer',function(data){
 		player.name = data.name;
 		PLAYER_LIST[socket.id] = player;
+		player.color = data.color;
 		player.x = data.x;
 		player.y = data.y;
 		player.z = data.z;
@@ -70,7 +72,8 @@ setInterval(function(){
 			y:player.y,
 			z:player.z,
 			id:player.id,
-			name:player.name
+			name:player.name,
+			color:player.color
 		});
 
 	}

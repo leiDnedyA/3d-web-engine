@@ -40,6 +40,7 @@ var ClientPlayer = {
 	object: null,
 	name: '',
 	id: 0,
+  color: '',
 	speed: 1/10,
     inputs: [false, false, false, false], //[up, down, left, right]
     velocity: [0, 0, 0],
@@ -152,7 +153,8 @@ function start(){
 
   isStarted = true;
   ClientPlayer.name = usernameInput.value;
-  playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], '#' + Math.floor(Math.random()*16777215).toString(16), true);
+  ClientPlayer.color ='#' + Math.floor(Math.random()*16777215).toString(16);
+  playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], ClientPlayer.color, true);
 	
 
   /* nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
@@ -196,7 +198,7 @@ function createPlayerObj(name, id, position, pColor, isPlayer){
 		ClientPlayer.init(obj, id);
 	}
 	gameObjects.push([obj, id]);
-  console.log([obj, id]);
+  //console.log([obj, id]);
   scene.add(obj);
 	return obj;
 }
