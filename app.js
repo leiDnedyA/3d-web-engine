@@ -52,15 +52,37 @@ io.sockets.on('connection',function(socket){
 		player.y = data.y;
 		player.z = data.z;
 		console.log(player.name + " has joined the server");
+		console.log(getObjSize(SOCKET_LIST) + " players are online");
+	});
+
+	socket.on('playerMove',function(data){
+		player.x = data.x;
+		player.y = data.y;
+		player.z = data.z;
+		//console.log("Cords: " + player.x + player.y + player.z);
 	});
 
 	socket.on('disconnect',function(){
 		console.log(player.name + " has left the server");
+		for(var i in SOCKET_LIST){
+			var s = SOCKET_LIST[i];
+			s.emit('disconnection',{id: player.id});
+		}
 		delete SOCKET_LIST[socket.id];
 		delete PLAYER_LIST[socket.id];
+		console.log(getObjSize(SOCKET_LIST) + " players are online");
 	});
 	
 });
+
+function getObjSize(obj) {
+  var size = 0,
+    key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
+}
 
 setInterval(function(){
 	var pack = [];

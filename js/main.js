@@ -47,6 +47,7 @@ var ClientPlayer = {
     movePlayer: function() {
     	//this section detects movement
     	this.inputs = getArrowKeys(this.inputs);
+      let playerMovedYet = false;
       //console.log(this.inputs);
         //detects movement on vertical axis
         if(this.inputs[0] || this.inputs[1]){
@@ -65,10 +66,18 @@ var ClientPlayer = {
 
         //this section updates the position
         if (this.object.position.x  + this.velocity[0] < worldLimits[1] & this.object.position.x + this.velocity[0] > worldLimits[0]){
-        	this.object.position.x += this.velocity[0] * this.speed;	
+        	this.object.position.x += this.velocity[0] * this.speed;
+          if (!playerMovedYet){
+            playerMove();
+            playerMovedYet = true;
+          }
         }
         if (this.object.position.z + this.velocity[1] < worldLimits[1] & this.object.position.z + this.velocity[1] > worldLimits[0]){
         	this.object.position.z += this.velocity[1] * this.speed;	
+          if (!playerMovedYet){
+            playerMove();
+            playerMovedYet = true;
+          }
         }
     },
     update: function() {
@@ -211,8 +220,10 @@ function playerStart(){
 }
 
 function gameObjectExistsId(id){
-  if (gameObjects[id]){
-    return true;
+  for(i in gameObjects){
+    if (gameObjects[i][1] == id){
+      return true;
+    }
   }
   return false;
 }
@@ -220,6 +231,7 @@ function gameObjectExistsId(id){
 function gameObjectsLookUp(id){
   for(i in gameObjects){
     if (gameObjects[i][1] == id){
+      //console.log("ID: " + id + ", Pos in list: " + i);
       return gameObjects[i];
     }
   }

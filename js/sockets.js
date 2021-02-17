@@ -19,9 +19,9 @@ socket.on("newPositions", function(data){
 		for (var i = 0; i < data.length; i++) {
 			if(data[i].id != ClientPlayer.id){
 				if(gameObjectExistsId(data[i].id)){
-
-				gameObjects[gameObjectLookUp(data[i].id)].position[0] = data[i].x;
-				gameObjects[gameObjectLookUp(data[i].id)].position[1] = data[i].y;
+					//console.log(data[i]);
+				gameObjectsLookUp(data[i].id)[0].position.x = data[i].x;
+				gameObjectsLookUp(data[i].id)[0].position.z = data[i].z;
 			}else{
 				createPlayerObj(data[i].name,data[i].id, [data[i].x, data[i].y, data[i].z], data[i].color, false);
 				//console.log("Game Object Added: " + data[i].id);
@@ -32,6 +32,12 @@ socket.on("newPositions", function(data){
 	}
 });
 
+socket.on("disconnection",function(data){
+	console.log(data.id);
+	scene.remove(gameObjectsLookUp(data.id)[0]);
+
+});
+
 function createPlayer(){
 	socket.emit('createPlayer', {
 		name: ClientPlayer.name,
@@ -40,4 +46,12 @@ function createPlayer(){
 		y: ClientPlayer.object.position.y,
 		z: ClientPlayer.object.position.z,
 	});
+}
+
+function playerMove(){
+	socket.emit('playerMove', {
+		x: ClientPlayer.object.position.x,
+		y: ClientPlayer.object.position.y,
+		z: ClientPlayer.object.position.z,
+	});	
 }
