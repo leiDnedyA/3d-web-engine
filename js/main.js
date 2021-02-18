@@ -9,7 +9,11 @@ const loader = new THREE.FontLoader();
 
 //game engine variables
 const gameObjects = [];
-const worldLimits = [-40, 40];
+const worldLimits = {
+  x: [-40, 40], //Sets world limits for all different axis
+  y: [-40, 40],
+  z: [-40, 40]
+};
 const playerSize = 2;
 const textColor = "#FFFFFF";
 var localId = null;
@@ -65,14 +69,14 @@ var ClientPlayer = {
           }
 
         //this section updates the position
-        if (this.object.position.x  + this.velocity[0] < worldLimits[1] & this.object.position.x + this.velocity[0] > worldLimits[0]){
+        if (this.object.position.x  + this.velocity[0] < worldLimits.x[1] & this.object.position.x + this.velocity[0] > worldLimits.x[0]){
         	this.object.position.x += this.velocity[0] * this.speed;
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
           }
         }
-        if (this.object.position.z + this.velocity[1] < worldLimits[1] & this.object.position.z + this.velocity[1] > worldLimits[0]){
+        if (this.object.position.z + this.velocity[1] < worldLimits.z[1] & this.object.position.z + this.velocity[1] > worldLimits.z[0]){
         	this.object.position.z += this.velocity[1] * this.speed;	
           if (!playerMovedYet){
             playerMove();
