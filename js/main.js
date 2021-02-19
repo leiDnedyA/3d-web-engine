@@ -19,7 +19,7 @@ const textColor = "#FFFFFF";
 var localId = null;
 var isStarted = false;
 var tempStartPos = [0, 0, 0];
-
+var firstPerson = true;
 
 //Setup for HTML elements
 const usernameInput = document.querySelector("#usernameInput");
@@ -55,10 +55,10 @@ var ClientPlayer = {
       //console.log(this.inputs);
         //detects movement on vertical axis
         if(this.inputs[0] || this.inputs[1]){
-          if (this.inputs[0]){this.velocity[1]=-1}
-          else{this.velocity[1]=1}
+          if (this.inputs[0]){this.velocity[2]=-1}
+          else{this.velocity[2]=1}
         }else{
-          this.velocity[1]=0;
+          this.velocity[2]=0;
           }
         //detects movement on horizontal axis
         if(this.inputs[2] || this.inputs[3]){
@@ -67,7 +67,7 @@ var ClientPlayer = {
         }else{
           this.velocity[0]=0;
           }
-
+          
         //this section updates the position
         if (this.object.position.x  + this.velocity[0] < worldLimits.x[1] & this.object.position.x + this.velocity[0] > worldLimits.x[0]){
         	this.object.position.x += this.velocity[0] * this.speed;
@@ -76,8 +76,8 @@ var ClientPlayer = {
             playerMovedYet = true;
           }
         }
-        if (this.object.position.z + this.velocity[1] < worldLimits.z[1] & this.object.position.z + this.velocity[1] > worldLimits.z[0]){
-        	this.object.position.z += this.velocity[1] * this.speed;	
+        if (this.object.position.z + this.velocity[2] < worldLimits.z[1] & this.object.position.z + this.velocity[2] > worldLimits.z[0]){
+        	this.object.position.z += this.velocity[2] * this.speed;	
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
@@ -85,7 +85,13 @@ var ClientPlayer = {
         }
     },
     update: function() {
-    	this.movePlayer();
+    	
+      if (firstPerson){
+          updateCameraPos(ClientPlayer.object, ClientPlayer.velocity);
+          }
+
+      this.movePlayer();
+
     },
     init: function(obj, id){
     	this.object = obj;
@@ -170,10 +176,10 @@ function start(){
   playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], ClientPlayer.color, true);
 	
 
-  /* nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
+  nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
   scene.add(nonPlayerObj);
   gameObjects.push(nonPlayerObj);
-  console.log(nonPlayerObj.id); */
+  console.log(nonPlayerObj.id);
 
 	camera.position.z = ClientPlayer.object.position.z + 5;
 
