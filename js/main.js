@@ -1,4 +1,3 @@
-
 //scene setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -20,7 +19,7 @@ const textColor = "#FFFFFF";
 var localId = null;
 var isStarted = false;
 var tempStartPos = [0, 0, 0];
-var firstPersonControls;
+
 
 //Setup for HTML elements
 const usernameInput = document.querySelector("#usernameInput");
@@ -56,10 +55,10 @@ var ClientPlayer = {
       //console.log(this.inputs);
         //detects movement on vertical axis
         if(this.inputs[0] || this.inputs[1]){
-          if (this.inputs[0]){this.velocity[2]=-1}
-          else{this.velocity[2]=1}
+          if (this.inputs[0]){this.velocity[1]=-1}
+          else{this.velocity[1]=1}
         }else{
-          this.velocity[2]=0;
+          this.velocity[1]=0;
           }
         //detects movement on horizontal axis
         if(this.inputs[2] || this.inputs[3]){
@@ -77,8 +76,8 @@ var ClientPlayer = {
             playerMovedYet = true;
           }
         }
-        if (this.object.position.z + this.velocity[2] < worldLimits.z[1] & this.object.position.z + this.velocity[2] > worldLimits.z[0]){
-        	this.object.position.z += this.velocity[2] * this.speed;	
+        if (this.object.position.z + this.velocity[1] < worldLimits.z[1] & this.object.position.z + this.velocity[1] > worldLimits.z[0]){
+        	this.object.position.z += this.velocity[1] * this.speed;	
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
@@ -158,6 +157,7 @@ function update(){
 
 	ClientPlayer.update();
 
+
 	//camera.position.z = Player.object.position.z + 5;
 	renderer.render(scene, camera);
 }
@@ -168,14 +168,14 @@ function start(){
   ClientPlayer.name = usernameInput.value;
   ClientPlayer.color ='#' + Math.floor(Math.random()*16777215).toString(16);
   playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], ClientPlayer.color, true);
-	firstPersonControls = new THREE.FirstPersonControls(camera, renderer.domElement);
+	
 
   /* nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
   scene.add(nonPlayerObj);
   gameObjects.push(nonPlayerObj);
   console.log(nonPlayerObj.id); */
 
-	camera.position.z = ClientPlayer.object.position.z - 1;
+	camera.position.z = ClientPlayer.object.position.z + 5;
 
 	update();
 }
