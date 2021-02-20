@@ -68,9 +68,9 @@ var ClientPlayer = {
           this.velocity[0]=0;
           }
           
-        //this section updates the position
-        let potentialXMove = this.object.position.x  + playerDirection[0] * -this.velocity[2]*this.speed;
-        let potentialZMove = this.object.position.z  - playerDirection[2] * -this.velocity[2]*this.speed;
+        //this section updates the position for motion forwards
+        let potentialXMove = this.object.position.x  + (playerDirection[0]) * -this.velocity[2]*this.speed;
+        let potentialZMove = this.object.position.z  - (playerDirection[2] - 0) * -this.velocity[2]*this.speed;
         if (potentialXMove < worldLimits.x[1] & potentialXMove > worldLimits.x[0]){
         	this.object.position.x = potentialXMove;
           if (!playerMovedYet){
@@ -87,13 +87,11 @@ var ClientPlayer = {
         }
     },
     update: function() {
-    	
-      if (firstPerson){
-          updateCameraPos(ClientPlayer.object, ClientPlayer.velocity);
-          }
 
       this.movePlayer();
-
+       if (firstPerson){
+          updateCameraPos(ClientPlayer.object, ClientPlayer.velocity);
+        }
     },
     init: function(obj, id){
     	this.object = obj;

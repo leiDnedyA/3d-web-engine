@@ -18,8 +18,8 @@ function updateCameraPos(p, v){
 		camera.lookAt(p.position);
 		//p.lookAt(p.position.x + v[0], p.position.y + v[1], p.position.z + v[2]);
 		playerDirection = [Math.sin(degToRad(mouseX)), 0, -Math.cos(degToRad(mouseX))];
-		console.log(playerDirection)
-		console.log(p.rotation)
+		//console.log(playerDirection)
+		//console.log(p.rotation)
 		/*console.log(camera.position.x + " : " + p.position.x);
 		console.log(camera.position.z + " : " + p.position.z);*/
 		camera.position.x = p.position.x - playerDirection[0] * camDistance;
