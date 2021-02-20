@@ -1,5 +1,6 @@
 var playerDirection = [0,0,1];
 const camDistance = 5;
+const camHeight = 2;
 function updateCameraPos(p, v){
 	
 	
@@ -22,7 +23,7 @@ function updateCameraPos(p, v){
 		/*console.log(camera.position.x + " : " + p.position.x);
 		console.log(camera.position.z + " : " + p.position.z);*/
 		camera.position.x = p.position.x - playerDirection[0] * camDistance;
-		//camera.position.y = p.position.y - playerDirection[1];
+		camera.position.y = p.position.y + camHeight;
 		camera.position.z = p.position.z + playerDirection[2] * camDistance;
 	}
 	

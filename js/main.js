@@ -69,8 +69,8 @@ var ClientPlayer = {
           }
           
         //this section updates the position
-        let potentialXMove = this.object.position.x  - playerDirection[0] * this.velocity[0]*this.speed;
-        let potentialZMove = this.object.position.z  - playerDirection[2] * this.velocity[0]*this.speed;
+        let potentialXMove = this.object.position.x  + playerDirection[0] * -this.velocity[2]*this.speed;
+        let potentialZMove = this.object.position.z  - playerDirection[2] * -this.velocity[2]*this.speed;
         if (potentialXMove < worldLimits.x[1] & potentialXMove > worldLimits.x[0]){
         	this.object.position.x = potentialXMove;
           if (!playerMovedYet){
