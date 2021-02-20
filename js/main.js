@@ -72,12 +72,12 @@ var ClientPlayer = {
         let potentialXMove = this.object.position.x  + (playerDirection[0]) * -this.velocity[2]*this.speed;
         let potentialZMove = this.object.position.z  - (playerDirection[2] - 0) * -this.velocity[2]*this.speed;
 
-        playerDirection2 = [Math.sin(degToRad(mouseX+90)), 0, -Math.cos(degToRad(mouseX+90))];
+        playerDirection2 = [Math.sin(degToRad(rotationX+90)), 0, -Math.cos(degToRad(rotationX+90))];
 
         //this section updates the position for motion sideways
         let sideXMove = this.object.position.x + (playerDirection2[0]) * -this.velocity[0]*this.speed;
         let sideZMove = this.object.position.z - (playerDirection2[2]) * -this.velocity[0]*this.speed;
-
+ 
         let avgXMove = (potentialXMove+sideXMove)/2;
         let avgZMove = (potentialZMove+sideZMove)/2;
 
@@ -286,7 +286,7 @@ function gameObjectsLookUp(id){
 
 function createGroundPlane(){
   const geometry = new THREE.BoxGeometry( 80, 1, 40 );
-  const material = new THREE.MeshBasicMaterial( {color: 0xf0f0f0, side: THREE.DoubleSide} );
+  const material = new THREE.MeshBasicMaterial( {color: 0x262b33, side: THREE.DoubleSide} );
   const plane = new THREE.Mesh( geometry, material );
   plane.position.x = 0;
   plane.position.y = -2;

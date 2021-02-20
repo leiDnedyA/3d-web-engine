@@ -1,6 +1,9 @@
 // helper function
 
 const RADIUS = 20;
+var sensitivity = 1;
+var rotationX = 0;
+var rotationY = 0;
 var canvas = renderer.domElement;
 
 function degToRad(degrees) {
@@ -48,6 +51,8 @@ function updatePosition(e) {
   if (firstPerson){
     mouseX += e.movementX;
     mouseY += e.movementY;
+    rotationX = mouseX * sensitivity;
+    rotationY = mouseY * sensitivity;
     // if (mouseX > canvas.width + RADIUS) {
     //     mouseX = -RADIUS;
     // }
@@ -60,7 +65,7 @@ function updatePosition(e) {
     // if (mouseY < -RADIUS) {
     //     mouseY = canvas.height + RADIUS;
     // }
-    ClientPlayer.object.rotation.y = degToRad(mouseX);
+    ClientPlayer.object.rotation.y = degToRad(rotationX);
   //tracker.textContent = "X position: " + mouseX + ", Y position: " + mouseY;
   //console.log("x: " + mouseX + ", y: " + mouseY);
   }

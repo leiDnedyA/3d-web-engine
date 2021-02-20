@@ -7,24 +7,97 @@
 			margin: 0;
 			background-color: black;
 		}
-		#game_canv {
-			width: 100%;
-			height: 100%;
+		h1 {
+			color: white;
+			font-family: Arial, Helvetica, sans-serif;
+			margin-left: 1%;
 		}
 	</style>
 </head>
-<body>
-	<input type="text" id="usernameInput" placeholder="username"><button onclick="startOnClick();">Start</button>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="js/sockets.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/camController.js"></script>
-	<script src="js/mouseControls.js"></script>
-	<script type="text/javascript">
-		function startOnClick(){
-			playerStart();
+<body onload="start();">
+<canvas id="textCanv"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js"></script>
+<script type="text/javascript">
+	
+	const textCanv = document.querySelector("#textCanv");
+	const ctx = textCanv.getContext("2d");
+
+	textCanv.width = window.innerWidth;
+	textCanv.height = window.innerHeight * 1/8;
+
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera(75, window.innerWidth/(window.innerHeight-textCanv.height), 0.1, 1000);
+	const renderer = new THREE.WebGLRenderer();
+	const loader = new THREE.FontLoader();
+	
+
+	const cubeSize = 2.5;
+	const title = "Gang War 3D (WIP)";
+	const desc = "click on the cube to begin";
+	const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+	const material = new THREE.MeshBasicMaterial({color: "#ffffff"});
+	const obj = new THREE.Mesh(geometry, material);
+	const rotSpeed = .005;
+	var textSize = 20;
+	var textIncreasing = true;
+
+	renderer.setSize(window.innerWidth, window.innerHeight-textCanv.height);
+	document.body.appendChild(renderer.domElement);
+
+	function update(){
+
+		requestAnimationFrame(update);
+		renderer.render(scene, camera);
+
+		updateText();
+
+		obj.rotation.x += rotSpeed;
+		obj.rotation.y += rotSpeed;
+		//obj.rotation.z += rotSpeed;
+
+		camera.position.x = obj.position.x + 5;
+		camera.lookAt(obj.position);
+	}
+
+	function start(){
+		
+		updateText();
+
+		//textObj = createTextObj(title, "#ffffff");
+		scene.add(obj);
+		//scene.add(textObj);
+
+		update();
+	}
+
+	function updateText(){
+
+		let maxTextSize = 40;
+		let minTextSize = 15;
+		let textDelta = .08;
+		let textMargin = 50;
+
+		if(textSize >= maxTextSize){
+			textIncreasing = false;
+		}else if(textSize <= minTextSize){
+			textIncreasing = true;
 		}
-	</script>
+
+		if(textIncreasing){
+			textSize += textDelta;
+		}else{
+			textSize -= textDelta;
+		}
+
+		//draws Text
+		ctx.clearRect(0, 0, textCanv.width, textCanv.height);
+		ctx.font = textSize + "px Arial";
+		ctx.fillStyle = "#ffffff";
+		ctx.fillText(title, textCanv.width/2-textSize*(title.length/2), textMargin);
+		ctx.font = (textSize-10) + "px Arial";
+		ctx.fillText(desc, textCanv.width/2-(textSize-10)*(desc.length/2), textMargin+textSize);
+	}
+
+</script>
 </body>
 </html>

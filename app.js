@@ -4,7 +4,7 @@ var serv = require('http').Server(app);
 
 //sets up server
 app.get('/',function(req,res){
-	res.sendFile(__dirname + '/');
+	res.sendFile(__dirname + '/game.html');
 });
 app.use('/',express.static(__dirname + '/'));
 
