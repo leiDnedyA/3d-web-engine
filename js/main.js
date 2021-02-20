@@ -12,7 +12,7 @@ const gameObjects = [];
 const worldLimits = {
   x: [-40, 40], //Sets world limits for all different axis
   y: [-40, 40],
-  z: [-40, 40]
+  z: [-40, 0]
 };
 const playerSize = 2;
 const textColor = "#FFFFFF";
@@ -69,15 +69,17 @@ var ClientPlayer = {
           }
           
         //this section updates the position
-        if (this.object.position.x  + this.velocity[0] < worldLimits.x[1] & this.object.position.x + this.velocity[0] > worldLimits.x[0]){
-        	this.object.position.x += this.velocity[0] * this.speed;
+        let potentialXMove = this.object.position.x  - playerDirection[0] * this.velocity[0]*this.speed;
+        let potentialZMove = this.object.position.z  - playerDirection[2] * this.velocity[0]*this.speed;
+        if (potentialXMove < worldLimits.x[1] & potentialXMove > worldLimits.x[0]){
+        	this.object.position.x = potentialXMove;
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
           }
         }
-        if (this.object.position.z + this.velocity[2] < worldLimits.z[1] & this.object.position.z + this.velocity[2] > worldLimits.z[0]){
-        	this.object.position.z += this.velocity[2] * playerDirection[2] * this.speed;	
+        if (potentialZMove < worldLimits.z[1] & potentialZMove > worldLimits.z[0]){
+        	this.object.position.z = potentialZMove;	
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
@@ -125,6 +127,18 @@ function getArrowKeys(keyz){
         case "ArrowRight":
           pressedKeys[3] = true;
           break;
+        case "w":
+          pressedKeys[0] = true;
+          break;
+        case "s":
+          pressedKeys[1] = true;
+          break;
+        case "a":
+          pressedKeys[2] = true;
+          break;
+        case "d":
+          pressedKeys[3] = true;
+          break;
         
         default:
           break;
@@ -144,6 +158,18 @@ function getArrowKeys(keyz){
           pressedKeys[2] = false;
           break;
         case "ArrowRight":
+          pressedKeys[3] = false;
+          break;
+        case "w":
+          pressedKeys[0] = false;
+          break;
+        case "s":
+          pressedKeys[1] = false;
+          break;
+        case "a":
+          pressedKeys[2] = false;
+          break;
+        case "d":
           pressedKeys[3] = false;
           break;
         
