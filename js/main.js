@@ -77,7 +77,7 @@ var ClientPlayer = {
           }
         }
         if (this.object.position.z + this.velocity[2] < worldLimits.z[1] & this.object.position.z + this.velocity[2] > worldLimits.z[0]){
-        	this.object.position.z += this.velocity[2] * this.speed;	
+        	this.object.position.z += this.velocity[2] * playerDirection[2] * this.speed;	
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
