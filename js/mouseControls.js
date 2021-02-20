@@ -48,18 +48,18 @@ function updatePosition(e) {
   if (firstPerson){
     mouseX += e.movementX;
     mouseY += e.movementY;
-    if (mouseX > canvas.width + RADIUS) {
-        mouseX = -RADIUS;
-    }
-    if (mouseY > canvas.height + RADIUS) {
-        mouseY = -RADIUS;
-    }  
-    if (mouseX < -RADIUS) {
-        mouseX = canvas.width + RADIUS;
-    }
-    if (mouseY < -RADIUS) {
-        mouseY = canvas.height + RADIUS;
-    }
+    // if (mouseX > canvas.width + RADIUS) {
+    //     mouseX = -RADIUS;
+    // }
+    // if (mouseY > canvas.height + RADIUS) {
+    //     mouseY = -RADIUS;
+    // }  
+    // if (mouseX < -RADIUS) {
+    //     mouseX = canvas.width + RADIUS;
+    // }
+    // if (mouseY < -RADIUS) {
+    //     mouseY = canvas.height + RADIUS;
+    // }
     ClientPlayer.object.rotation.y = degToRad(mouseX);
   //tracker.textContent = "X position: " + mouseX + ", Y position: " + mouseY;
   //console.log("x: " + mouseX + ", y: " + mouseY);

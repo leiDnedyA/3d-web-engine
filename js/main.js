@@ -45,7 +45,7 @@ var ClientPlayer = {
 	name: '',
 	id: 0,
   color: '',
-	speed: 1/10,
+	speed: 3/10,
     inputs: [false, false, false, false], //[up, down, left, right]
     velocity: [0, 0, 0],
     movePlayer: function() {
@@ -71,38 +71,31 @@ var ClientPlayer = {
         //this section updates the position for motion forwards
         let potentialXMove = this.object.position.x  + (playerDirection[0]) * -this.velocity[2]*this.speed;
         let potentialZMove = this.object.position.z  - (playerDirection[2] - 0) * -this.velocity[2]*this.speed;
-        if (potentialXMove < worldLimits.x[1] & potentialXMove > worldLimits.x[0]){
-        	this.object.position.x = potentialXMove;
+
+        playerDirection2 = [Math.sin(degToRad(mouseX+90)), 0, -Math.cos(degToRad(mouseX+90))];
+
+        //this section updates the position for motion sideways
+        let sideXMove = this.object.position.x + (playerDirection2[0]) * -this.velocity[0]*this.speed;
+        let sideZMove = this.object.position.z - (playerDirection2[2]) * -this.velocity[0]*this.speed;
+
+        let avgXMove = (potentialXMove+sideXMove)/2;
+        let avgZMove = (potentialZMove+sideZMove)/2;
+
+        if (avgXMove < worldLimits.x[1] & avgXMove > worldLimits.x[0]){
+          this.object.position.x = avgXMove;
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
           }
         }
-        if (potentialZMove < worldLimits.z[1] & potentialZMove > worldLimits.z[0]){
-        	this.object.position.z = potentialZMove;	
+        if (avgZMove < worldLimits.z[1] & avgZMove > worldLimits.z[0]){
+          this.object.position.z = avgZMove;  
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
           }
         }
 
-        //this section updates the position for motion sideways
-        // let sideXMove = this.object.position.x + (playerDirection[0] - 1) * -this.velocity[0]*this.speed;
-        // let sideZMove = this.object.position.z + (playerDirection[2] + 1) * -this.velocity[0]*this.speed;
-        // if (sideXMove < worldLimits.x[1] & sideXMove > worldLimits.x[0]){
-        //   this.object.position.x = sideXMove;
-        //   if (!playerMovedYet){
-        //     playerMove();
-        //     playerMovedYet = true;
-        //   }
-        // }
-        // if (sideZMove < worldLimits.z[1] & sideZMove > worldLimits.z[0]){
-        //   this.object.position.z = sideZMove;  
-        //   if (!playerMovedYet){
-        //     playerMove();
-        //     playerMovedYet = true;
-        //   }
-        // }
 
 
     },
