@@ -85,6 +85,26 @@ var ClientPlayer = {
             playerMovedYet = true;
           }
         }
+
+        //this section updates the position for motion sideways
+        // let sideXMove = this.object.position.x + (playerDirection[0] - 1) * -this.velocity[0]*this.speed;
+        // let sideZMove = this.object.position.z + (playerDirection[2] + 1) * -this.velocity[0]*this.speed;
+        // if (sideXMove < worldLimits.x[1] & sideXMove > worldLimits.x[0]){
+        //   this.object.position.x = sideXMove;
+        //   if (!playerMovedYet){
+        //     playerMove();
+        //     playerMovedYet = true;
+        //   }
+        // }
+        // if (sideZMove < worldLimits.z[1] & sideZMove > worldLimits.z[0]){
+        //   this.object.position.z = sideZMove;  
+        //   if (!playerMovedYet){
+        //     playerMove();
+        //     playerMovedYet = true;
+        //   }
+        // }
+
+
     },
     update: function() {
 
@@ -198,7 +218,7 @@ function start(){
   ClientPlayer.name = usernameInput.value;
   ClientPlayer.color ='#' + Math.floor(Math.random()*16777215).toString(16);
   playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], ClientPlayer.color, true);
-	
+	createGroundPlane();
 
   nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
   scene.add(nonPlayerObj);
@@ -269,4 +289,14 @@ function gameObjectsLookUp(id){
       return gameObjects[i];
     }
   }
+}
+
+function createGroundPlane(){
+  const geometry = new THREE.BoxGeometry( 80, 1, 40 );
+  const material = new THREE.MeshBasicMaterial( {color: 0xf0f0f0, side: THREE.DoubleSide} );
+  const plane = new THREE.Mesh( geometry, material );
+  plane.position.x = 0;
+  plane.position.y = -2;
+  plane.position.z = -20;
+  scene.add( plane );
 }
