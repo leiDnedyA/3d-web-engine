@@ -83,6 +83,9 @@ var ClientPlayer = {
 
         if (avgXMove < worldLimits.x[1] & avgXMove > worldLimits.x[0]){
           this.object.position.x = avgXMove;
+          if (firstPerson){
+             setPlayerDirection(ClientPlayer.object, ClientPlayer.velocity);
+           }
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
@@ -90,6 +93,9 @@ var ClientPlayer = {
         }
         if (avgZMove < worldLimits.z[1] & avgZMove > worldLimits.z[0]){
           this.object.position.z = avgZMove;  
+          if (firstPerson){
+             setPlayerDirection(ClientPlayer.object, ClientPlayer.velocity);
+           }
           if (!playerMovedYet){
             playerMove();
             playerMovedYet = true;
@@ -102,9 +108,9 @@ var ClientPlayer = {
     update: function() {
 
       this.movePlayer();
-       if (firstPerson){
-          updateCameraPos(ClientPlayer.object, ClientPlayer.velocity);
-        }
+       // if (firstPerson){
+       //    updateCameraPos(ClientPlayer.object, ClientPlayer.velocity);
+       //  }
     },
     init: function(obj, id){
     	this.object = obj;
@@ -218,7 +224,11 @@ function start(){
   gameObjects.push(nonPlayerObj);
   console.log(nonPlayerObj.id);
 
-	camera.position.z = ClientPlayer.object.position.z + 5;
+	camera.position.z = ClientPlayer.object.position.z - camDistance;
+  camera.position.y = ClientPlayer.object.position.y + camHeight;
+  camera.lookAt(ClientPlayer.object.position);
+
+  ClientPlayer.object.add(camera);
 
 	update();
 }
