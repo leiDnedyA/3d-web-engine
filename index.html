@@ -7,49 +7,56 @@
 			margin: 0;
 			background-color: black;
 		}
-		h1 {
-			color: white;
-			font-family: Arial, Helvetica, sans-serif;
-			margin-left: 1%;
-		}
 	</style>
 </head>
 <body onload="start();">
-<canvas id="textCanv"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js"></script>
+<script src="node_modules/dat.gui/build/dat.gui.min.js"></script>
 <script type="text/javascript">
-	
-	const textCanv = document.querySelector("#textCanv");
-	const ctx = textCanv.getContext("2d");
 
-	textCanv.width = window.innerWidth;
-	textCanv.height = window.innerHeight * 1/8;
 
 	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera(75, window.innerWidth/(window.innerHeight-textCanv.height), 0.1, 1000);
+	const camera = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
 	const renderer = new THREE.WebGLRenderer();
 	const loader = new THREE.FontLoader();
-	
+
+	const gui = new dat.GUI();	
+	var guiParameters = {
+		playerName: "Name",
+		color: "#0000ff",
+	};
+	var submitButton = {submit:function(){
+		location.href = 'game.html?' + 'name=' + guiParameters.playerName + '&color='+guiParameters.color.replace('#', '');
+	}};
 
 	const cubeSize = 2.5;
-	const title = "Gang War 3D (WIP)";
-	const desc = "click on the cube to begin";
 	const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-	const material = new THREE.MeshBasicMaterial({color: "#ffffff"});
+	const material = new THREE.MeshBasicMaterial({color: guiParameters.color});
+	const textMaterial = new THREE.MeshBasicMaterial({color: "#ffff00"});
 	const obj = new THREE.Mesh(geometry, material);
 	const rotSpeed = .005;
-	var textSize = 20;
-	var textIncreasing = true;
+	var textGeometry;
+	loader.load('fonts/Arial_Black_Regular.json', function ( x ){
+		textGeometry = new THREE.TextGeometry('Username', {
+		font: x,
+		size: .2,
+		height: 0,
+		curveSegments: 12,
+		bevelThickness: 0,
+		bevelSize: 0,
+		bevelEnabled: false
+	});
+	});
+	const textMesh = new THREE.Mesh(textGeometry, material);
 
-	renderer.setSize(window.innerWidth, window.innerHeight-textCanv.height);
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
 	document.body.appendChild(renderer.domElement);
 
 	function update(){
 
 		requestAnimationFrame(update);
 		renderer.render(scene, camera);
-
-		updateText();
 
 		obj.rotation.x += rotSpeed;
 		obj.rotation.y += rotSpeed;
@@ -60,42 +67,22 @@
 	}
 
 	function start(){
-		
-		updateText();
+		var pName = gui.add(guiParameters, 'playerName').name('Username');
+		var color = gui.addColor(guiParameters, 'color').name('Color');
+		gui.add(submitButton, 'submit').name('Start Game');
+
+		color.onChange(function(x){obj.material.color.setHex(x.replace("#","0x"));});
 
 		//textObj = createTextObj(title, "#ffffff");
+		//scene.add(obj);
 		scene.add(obj);
 		//scene.add(textObj);
 
 		update();
 	}
 
-	function updateText(){
+	function updateText(newText){
 
-		let maxTextSize = 40;
-		let minTextSize = 15;
-		let textDelta = .08;
-		let textMargin = 50;
-
-		if(textSize >= maxTextSize){
-			textIncreasing = false;
-		}else if(textSize <= minTextSize){
-			textIncreasing = true;
-		}
-
-		if(textIncreasing){
-			textSize += textDelta;
-		}else{
-			textSize -= textDelta;
-		}
-
-		//draws Text
-		ctx.clearRect(0, 0, textCanv.width, textCanv.height);
-		ctx.font = textSize + "px Arial";
-		ctx.fillStyle = "#ffffff";
-		ctx.fillText(title, textCanv.width/2-textSize*(title.length/2), textMargin);
-		ctx.font = (textSize-10) + "px Arial";
-		ctx.fillText(desc, textCanv.width/2-(textSize-10)*(desc.length/2), textMargin+textSize);
 	}
 
 </script>

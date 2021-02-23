@@ -22,9 +22,7 @@ var tempStartPos = [0, 0, 0];
 var firstPerson = true;
 
 //Setup for HTML elements
-const usernameInput = document.querySelector("#usernameInput");
-console.log(usernameInput);
-renderer.setSize(window.innerWidth, window.innerHeight - usernameInput.offsetHeight);
+renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 
@@ -206,6 +204,7 @@ function update(){
 
 	ClientPlayer.update();
 
+  setNametagRotation();
 
 	//camera.position.z = Player.object.position.z + 5;
 	renderer.render(scene, camera);
@@ -214,8 +213,14 @@ function update(){
 function start(){
 
   isStarted = true;
-  ClientPlayer.name = usernameInput.value;
+  ClientPlayer.name = getTextFromURL("name");
+  let urlColor = getTextFromURL('color');
+  if(urlColor != 'null'){
+    ClientPlayer.color ='#' + urlColor;
+  }else{
+
   ClientPlayer.color ='#' + Math.floor(Math.random()*16777215).toString(16);
+  }
   playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], ClientPlayer.color, true);
 	createGroundPlane();
 
@@ -303,3 +308,32 @@ function createGroundPlane(){
   plane.position.z = -20;
   scene.add( plane );
 }
+
+function getTextFromURL(t){
+
+  const fullURL = window.location.search.substring(1);
+  var parametersArray = fullURL.split('&');
+  for(var i in parametersArray){
+    var currentParameter = parametersArray[i].split('=');
+    if (currentParameter[0] == t) {
+      let spaceRegex = /%20/g;
+      return currentParameter[1].replace(spaceRegex, ' ');
+    }
+  }
+  return 'null';
+}
+
+function setNametagRotation(){
+  for (var i in gameObjects){
+    for (var j in gameObjects[i].children){
+
+      if(gameObjects[i].children[j].type == 'Mesh'){
+        gameObjects[i].children[j].lookAt(camera.position);
+      }
+    }
+  }
+}
+
+window.onload = (event) => {
+  playerStart();
+};
