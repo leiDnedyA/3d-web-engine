@@ -224,10 +224,10 @@ function start(){
   playerObj = createPlayerObj(ClientPlayer.name, ClientPlayer.id, [0, 0, 0], ClientPlayer.color, true);
 	createGroundPlane();
 
-  nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
-  scene.add(nonPlayerObj);
-  gameObjects.push(nonPlayerObj);
-  console.log(nonPlayerObj.id);
+  // nonPlayerObj = createPlayerObj("NPC", [2, 0, 0], textColor, false);
+  // scene.add(nonPlayerObj);
+  // gameObjects.push(nonPlayerObj);
+  // console.log(nonPlayerObj.id);
 
 	camera.position.z = ClientPlayer.object.position.z - camDistance;
   camera.position.y = ClientPlayer.object.position.y + camHeight;
@@ -325,10 +325,11 @@ function getTextFromURL(t){
 
 function setNametagRotation(){
   for (var i in gameObjects){
-    for (var j in gameObjects[i].children){
-
-      if(gameObjects[i].children[j].type == 'Mesh'){
-        gameObjects[i].children[j].lookAt(camera.position);
+    for (var j in gameObjects[i][0].children){
+      if(gameObjects[i][0].children[j].type == 'Mesh'){
+        let x = new THREE.Vector3();
+        camera.getWorldPosition(x);
+        gameObjects[i][0].children[j].lookAt(x);
       }
     }
   }
