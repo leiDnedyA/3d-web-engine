@@ -340,6 +340,18 @@ function setNametagRotation(){
   }
 }
 
+function playerKicked(reason){
+  clientIsConnected = false;
+  let message = "(SERVER): client has been kicked for reason: " + reason;
+  console.log(message);
+  renderer.domElement.remove();
+  let p = document.createElement('p');
+  p.innerText = message;
+  p.style.color = 'white';
+  document.body.appendChild(p);
+
+}
+
 window.onload = (event) => {
   playerStart();
 };

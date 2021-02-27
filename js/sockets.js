@@ -37,8 +37,7 @@ socket.on("newPositions", function(data){
 });
 
 socket.on('kicked', function(data){
-	clientIsConnected = false;
-	console.log("SERVER: client has been kicked because '" + data.reason + "'")
+	playerKicked(data.reason);
 });
 
 socket.on("disconnection",function(data){
