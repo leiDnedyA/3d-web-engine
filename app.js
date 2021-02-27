@@ -1,6 +1,7 @@
-var express = require('express');
-var app = express();
-var serv = require('http').Server(app);
+const express = require('express');
+const readline = require('readline');
+const app = express();
+const serv = require('http').Server(app);
 
 //sets up server
 app.get('/',function(req,res){
@@ -13,6 +14,47 @@ console.log('server started.');
 
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
+
+//sets up readline, which is a library that handles cmd inputs
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+/*this object holds all valid command inputs organized by the first word in the command, and directs them to the function associated
+with that command. NOTE: commands can only be one word long by design, and each function takes the entire input given in the cmd as a string*/
+const readlineInputFunctions = {
+	'hello' : function(input){
+		console.log('server: hello');
+	},
+	'kick' : function(input){
+		//kicks desired player. Format: 'kick <player name> <reason>'
+		let splitInput = splitText(input);
+		let playerName = splitInput[1];
+		let inputLength = splitInput.length;
+		let playerID = getPlayerIdByName(playerName);
+		let kickReason = '';
+		if (inputLength > 2){
+			for (i = 2; i < inputLength; i++) {
+			  console.log(splitInput[i]);
+			  kickReason = kickReason + splitInput[i];
+			  if (i != inputLength - 1){
+			  	kickReason += ' ';
+			  }
+			}
+		}
+		
+
+		if(playerID != -1){
+			console.log('kicking ' + playerName);
+			SOCKET_LIST[playerID].emit('kicked', {reason: kickReason});
+			SOCKET_LIST[playerID].disconnect();
+
+		}else{
+			console.log(playerName + ' is an invalid name');
+		}
+	},
+}
 
 //creates a class for the individual Players, allowing for their info to be stored in the server RAM
 class Player{
@@ -87,6 +129,8 @@ io.sockets.on('connection',function(socket){
 	
 });
 
+
+
 //This is the recursion loop that sends out info to each client at a set interval of milliseconds, defined by refreshSpeed
 const refreshSpeed = 25;
 setInterval(function(){
@@ -113,7 +157,17 @@ setInterval(function(){
 	}
 }, 1000/refreshSpeed);
 
-//a helper function
+//handles command line input
+rl.on('line', (input)=>{
+	let command = splitText(input)[0];
+	if(readlineInputFunctions.hasOwnProperty(command)){
+		readlineInputFunctions[command](input);
+	}else{
+		console.log('"' + input + '"is not a valid command');
+	}
+});	
+
+//helper functions
 function getObjSize(obj) {
   var size = 0,
     key;
@@ -121,4 +175,17 @@ function getObjSize(obj) {
     if (obj.hasOwnProperty(key)) size++;
   }
   return size;
+}
+
+function splitText(s){	
+	return s.split(' ');
+}
+
+function getPlayerIdByName(name){
+	for (let i in PLAYER_LIST){
+		if (PLAYER_LIST[i].name == name){
+			return i;
+		}
+	}
+	return -1;
 }

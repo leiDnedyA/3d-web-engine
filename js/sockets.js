@@ -36,6 +36,11 @@ socket.on("newPositions", function(data){
 	}
 });
 
+socket.on('kicked', function(data){
+	clientIsConnected = false;
+	console.log("SERVER: client has been kicked because '" + data.reason + "'")
+});
+
 socket.on("disconnection",function(data){
 	console.log(data.id);
 	scene.remove(gameObjectsLookUp(data.id)[0]);

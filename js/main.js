@@ -20,6 +20,7 @@ var localId = null;
 var isStarted = false;
 var tempStartPos = [0, 0, 0];
 var firstPerson = true;
+var clientIsConnected = true;
 
 //Setup for HTML elements
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -200,14 +201,18 @@ function getArrowKeys(keyz){
 //MAIN FUNCTIONS, works like Unity
 function update(){
 
-	requestAnimationFrame(update);
+  //checks to see if client has been kicked
+  if(clientIsConnected){
+      requestAnimationFrame(update);
 
-	ClientPlayer.update();
+      ClientPlayer.update();
 
-  setNametagRotation();
+      setNametagRotation();
 
-	//camera.position.z = Player.object.position.z + 5;
-	renderer.render(scene, camera);
+      //camera.position.z = Player.object.position.z + 5;
+      renderer.render(scene, camera);
+  }
+	
 }
 
 function start(){
