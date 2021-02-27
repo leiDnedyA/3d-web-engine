@@ -30,7 +30,7 @@ document.body.appendChild(renderer.domElement);
 var playerObj;
 
 class Player{
-  constructor(name/*String for name*/,color/*string containing hex value*/,position/*array of 2 ints*/,size/*array of 2 ints*/,nameTag/*bool to render nametag or not*/,id/*id based on server*/){
+  constructor(name/*String for name*/,color/*strin g containing hex value*/,position/*array of 2 ints*/,size/*array of 2 ints*/,nameTag/*bool to render nametag or not*/,id/*id based on server*/){
       this.name = name;
       this.color = color;
       this.position = position;
