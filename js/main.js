@@ -85,7 +85,7 @@ var ClientPlayer = {
              setPlayerDirection(ClientPlayer.object, ClientPlayer.velocity);
            }
           if (!playerMovedYet){
-            playerMove();
+            playerMove(); //playerMove is located in sockets.js
             playerMovedYet = true;
           }
         }
@@ -95,7 +95,7 @@ var ClientPlayer = {
              setPlayerDirection(ClientPlayer.object, ClientPlayer.velocity);
            }
           if (!playerMovedYet){
-            playerMove();
+            playerMove(); //playerMove is located in sockets.js
             playerMovedYet = true;
           }
         }

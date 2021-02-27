@@ -15,9 +15,13 @@ var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
 class Player{
-	constructor(id,name,color,x,y,z){
+	constructor(id,name,color,x,y,z, rotX, rotY, rotZ){
 		this.x = x;
 		this.y = y;
+		this.z = z;
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
 		this.id = id;
 		this.name = name;
 		this.color = color;
@@ -51,6 +55,9 @@ io.sockets.on('connection',function(socket){
 		player.x = data.x;
 		player.y = data.y;
 		player.z = data.z;
+		player.rotX = data.rotX;
+		player.rotY = data.rotY;
+		player.rotZ = data.rotZ;
 		console.log(player.name + " has joined the server");
 		console.log(getObjSize(SOCKET_LIST) + " players are online");
 	});
@@ -59,6 +66,9 @@ io.sockets.on('connection',function(socket){
 		player.x = data.x;
 		player.y = data.y;
 		player.z = data.z;
+		player.rotX = data.rotX;
+		player.rotY = data.rotY;
+		player.rotZ = data.rotZ;
 		//console.log("Cords: " + player.x + player.y + player.z);
 	});
 
@@ -93,6 +103,9 @@ setInterval(function(){
 			x:player.x,
 			y:player.y,
 			z:player.z,
+			rotX:player.rotX,
+			rotY:player.rotY,
+			rotZ:player.rotZ,
 			id:player.id,
 			name:player.name,
 			color:player.color
