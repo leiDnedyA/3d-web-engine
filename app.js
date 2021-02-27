@@ -14,6 +14,7 @@ console.log('server started.');
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
+//creates a class for the individual Players, allowing for their info to be stored in the server RAM
 class Player{
 	constructor(id,name,color,x,y,z, rotX, rotY, rotZ){
 		this.x = x;
@@ -28,6 +29,7 @@ class Player{
 	}
 }
 
+//Socket functions use Socket.io, a basic server library, to send info to and recieve info from each client.
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection',function(socket){
 	socket.id = Math.random();
@@ -85,15 +87,8 @@ io.sockets.on('connection',function(socket){
 	
 });
 
-function getObjSize(obj) {
-  var size = 0,
-    key;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) size++;
-  }
-  return size;
-}
-
+//This is the recursion loop that sends out info to each client at a set interval of milliseconds, defined by refreshSpeed
+const refreshSpeed = 25;
 setInterval(function(){
 	var pack = [];
 	for(var i in PLAYER_LIST){
@@ -116,4 +111,14 @@ setInterval(function(){
 		var socket = SOCKET_LIST[i];
 		socket.emit('newPositions',pack);
 	}
-}, 1000/25)
+}, 1000/refreshSpeed);
+
+//a helper function
+function getObjSize(obj) {
+  var size = 0,
+    key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
+}
