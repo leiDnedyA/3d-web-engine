@@ -218,6 +218,9 @@ function update(){
 function start(){
 
   isStarted = true;
+
+
+
   ClientPlayer.name = getTextFromURL("name");
   let urlColor = getTextFromURL('color');
   if(urlColor != 'null'){
@@ -239,7 +242,9 @@ function start(){
   camera.lookAt(ClientPlayer.object.position);
 
   ClientPlayer.object.add(camera);
-
+  
+  guiInit();
+  
 	update();
 }
 
