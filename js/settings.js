@@ -19,5 +19,6 @@ function guiInit(){
 function updateInit(){
 
 	sensitivity = guiParameters.sensitivity;
-
+	camera.fov = guiParameters.fov;
+	camera.updateProjectionMatrix();
 }
