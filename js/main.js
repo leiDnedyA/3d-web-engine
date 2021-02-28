@@ -209,6 +209,8 @@ function update(){
 
       setNametagRotation();
 
+      updateInit();
+
       //camera.position.z = Player.object.position.z + 5;
       renderer.render(scene, camera);
   }
@@ -218,8 +220,6 @@ function update(){
 function start(){
 
   isStarted = true;
-
-
 
   ClientPlayer.name = getTextFromURL("name");
   let urlColor = getTextFromURL('color');
@@ -244,7 +244,7 @@ function start(){
   ClientPlayer.object.add(camera);
   
   guiInit();
-  
+
 	update();
 }
 

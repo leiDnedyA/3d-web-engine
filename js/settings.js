@@ -9,4 +9,15 @@ const guiParameters = {
 function guiInit(){
 	fov = gui.add(guiParameters, 'fov').name('FOV');
 	guiSensitivity =  gui.add(guiParameters, 'sensitivity').name('Sensitivity');
+	fov.min(30);
+	fov.max(150);
+	guiSensitivity.min(.1);
+	guiSensitivity.max(1.5);
+
+}
+
+function updateInit(){
+
+	sensitivity = guiParameters.sensitivity;
+
 }
