@@ -1,6 +1,5 @@
-const gui= dat.GUI();
-var fov, sensitivity;
-
+var fov, guiSensitivity;
+const gui = new dat.GUI();
 
 const guiParameters = {
 	fov: 75, 
@@ -9,5 +8,5 @@ const guiParameters = {
 
 function guiInit(){
 	fov = gui.add(guiParameters, 'fov').name('FOV');
-	sensitivity =  gui.add(guiParameters, 'sensitivity').name('Sensitivity');
+	guiSensitivity =  gui.add(guiParameters, 'sensitivity').name('Sensitivity');
 }

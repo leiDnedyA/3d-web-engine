@@ -48,6 +48,9 @@ function lockChangeAlert() {
 //var tracker = document.getElementById('tracker');
 
 function updatePosition(e) {
+
+  console.log(mouseX + " : " + mouseY);
+
   if (firstPerson){
     mouseX += e.movementX;
     mouseY += e.movementY;
