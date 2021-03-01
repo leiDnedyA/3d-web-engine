@@ -1,9 +1,10 @@
 const express = require('express');
 const readline = require('readline');
-const app = express();
+const fs = require('fs');
 const serv = require('http').Server(app);
 
 //sets up server
+const app = express();
 app.get('/',function(req,res){
 	res.sendFile(__dirname + '/index.html');
 });
@@ -53,6 +54,9 @@ const readlineInputFunctions = {
 		}else{
 			console.log(playerName + ' is an invalid name');
 		}
+	},
+	'ban' : function(input){
+
 	},
 }
 
