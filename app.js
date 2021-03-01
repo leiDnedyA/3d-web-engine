@@ -1,10 +1,10 @@
 const express = require('express');
 const readline = require('readline');
 const fs = require('fs');
+const app = express();
 const serv = require('http').Server(app);
 
 //sets up server
-const app = express();
 app.get('/',function(req,res){
 	res.sendFile(__dirname + '/index.html');
 });
@@ -15,12 +15,16 @@ console.log('server started.');
 
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
+var bannedUsersJSON;
 
 //sets up readline, which is a library that handles cmd inputs
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
+
+//setting up JSON file that holds the banned players list
+loadBanList();
 
 /*this object holds all valid command inputs organized by the first word in the command, and directs them to the function associated
 with that command. NOTE: commands can only be one word long by design, and each function takes the entire input given in the cmd as a string*/
@@ -55,8 +59,41 @@ const readlineInputFunctions = {
 			console.log(playerName + ' is an invalid name');
 		}
 	},
-	'ban' : function(input){
+	'ban' : function(input){ // /ban + <Player Name> + <reason>
+		let splitInput = splitText(input);
+		let playerName = splitInput[1];
+		let inputLength = splitInput.length;
+		let playerID = getPlayerIdByName(playerName);
+		let banReason = '';
+		if (inputLength > 2){
+			for (i = 2; i < inputLength; i++) {
+			  console.log(splitInput[i]);
+			  banReason = banReason + splitInput[i];
+			  if (i != inputLength - 1){
+			  	banReason += ' ';
+			  }
+			}
+		}
+		
 
+		if(playerID != -1){
+			console.log(playerName + " has been banned for: " + banReason);
+			SOCKET_LIST[playerID].emit('kicked', {reason: "BANNED: " + banReason});
+			banUser(SOCKET_LIST[playerID].ipAddress, playerName, banReason);
+			SOCKET_LIST[playerID].disconnect();
+
+		}else{
+			console.log(playerName + ' is an invalid name');
+		}
+	},
+	'pardon' : function(input){ // /pardon + <IP to pardon>
+		let splitInput = splitText(input);
+		let pardonIP = splitInput[1];
+		if (bannedUsersJSON.hasOwnProperty(pardonIP)){
+			pardonUser(pardonIP);
+		}else{
+			console.log("This ip is not on the ban list")
+		}
 	},
 }
 
@@ -78,10 +115,17 @@ class Player{
 //Socket functions use Socket.io, a basic server library, to send info to and recieve info from each client.
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection',function(socket){
+	socket.ipAddress = socket.handshake.address.toString();
+	if (bannedUsersJSON.hasOwnProperty(socket.ipAddress)){
+		socket.emit('kicked', {reason: bannedUsersJSON[socket.ipAddress]['banReason']});
+		socket.disconnect();
+	}
+
 	socket.id = Math.random();
 	socket.x = 0;
 	socket.y = 0;
 	socket.z = 0;
+
 	SOCKET_LIST[socket.id] = socket;
 	var player = new Player(socket.id, 'name', 0, 0);
 	socket.emit("playerVars", {
@@ -192,4 +236,46 @@ function getPlayerIdByName(name){
 		}
 	}
 	return -1;
+}
+
+function banUser(ip, name, cause){
+	bannedUsersJSON[ip]={
+		'userName':name,
+		'banReason':cause
+	};
+	fs.writeFile('server_info/banned_users.json', JSON.stringify(bannedUsersJSON, null, 1), err => {
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log('SERVER: ' + name + ' has been successfully added to the ban list');
+		}
+	});
+}
+function pardonUser(ip){
+	delete bannedUsersJSON[ip];
+	fs.writeFile('server_info/banned_users.json', JSON.stringify(bannedUsersJSON, null, 1), err => {
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log('SERVER: ' + ip + ' has been successfully removed from the ban list');
+		}
+	});
+}
+
+function loadBanList(){
+	fs.readFile('server_info/banned_users.json', 'utf-8', (err, jsonString) => {
+		if (err){
+			console.log(err);
+		} else{
+			try{
+
+				bannedUsersJSON = JSON.parse(jsonString);
+				console.log('banned_users.json loaded');
+			}catch(err){
+				console.log('error parsing JSON: ', err);
+			}
+		}
+	});
 }
