@@ -65,6 +65,7 @@ const readlineInputFunctions = {
 		let inputLength = splitInput.length;
 		let playerID = getPlayerIdByName(playerName);
 		let banReason = '';
+		let ipToBan = SOCKET_LIST[playerID].ipAddress;
 		if (inputLength > 2){
 			for (i = 2; i < inputLength; i++) {
 			  console.log(splitInput[i]);
@@ -79,8 +80,15 @@ const readlineInputFunctions = {
 		if(playerID != -1){
 			console.log(playerName + " has been banned for: " + banReason);
 			SOCKET_LIST[playerID].emit('kicked', {reason: "BANNED: " + banReason});
-			banUser(SOCKET_LIST[playerID].ipAddress, playerName, banReason);
+			banUser(ipToBan, playerName, banReason);
 			SOCKET_LIST[playerID].disconnect();
+
+			for (let i in SOCKET_LIST){
+				if(SOCKET_LIST[i].ipAddress == ipToBan){
+					SOCKET_LIST[i].emit('kicked', {reason: "BANNED: " + banReason});
+					SOCKET_LIST[i].disconnect();
+				}
+			}
 
 		}else{
 			console.log(playerName + ' is an invalid name');
